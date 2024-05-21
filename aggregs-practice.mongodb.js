@@ -89,10 +89,77 @@ db.users.aggregate([
 	},
 ]);
 
-// 7) list all unique eye colors present in the collection...
-db.users.aggregate(
-    
-)
+// 8) list all unique eye colors present in the collection then count...
+db.users.aggregate([
+	{
+		$group: {
+			_id: "$eyeColor",
+		},
+	},
+	{
+		$count: "noOfEysColors",
+	},
+]);
+
+// 9) avg no. of tags per user...
+db.users.aggregate([
+	{
+		$unwind: {
+			path: "$tags",
+		},
+	},
+	{
+		$group: {
+			_id: "$_id",
+			noOfTags: {
+				$sum: 1,
+			},
+		},
+	},
+	{
+		$group: {
+			_id: null,
+			avgTagsPerUser: {
+				$avg: "$noOfTags",
+			},
+		},
+	},
+
+	// OR
+	/*[
+		{
+			$addFields: {
+				noOfTags: {
+					$size: {
+						$ifNull: ["$tags", []],
+					},
+				},
+			},
+		},
+		{
+			$group: {
+				_id: null,
+				avgTagsPerUser: {
+					$avg: "$noOfTags",
+				},
+			},
+		},
+	],*/
+]);
+
+// 10) how many users have "enim" as one of their tag...
+db.users.aggregate([
+	{
+		$match: {
+			tags: "enim",
+		},
+	},
+	{
+		$count: "usersWithEnimTag",
+	},
+]);
+
+// 11) list names and age of users who are inactive and have "velit" as a tag...
 
 // const q1 = db.users.aggregate(
 //     [
