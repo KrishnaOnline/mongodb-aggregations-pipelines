@@ -160,6 +160,37 @@ db.users.aggregate([
 ]);
 
 // 11) list names and age of users who are inactive and have "velit" as a tag...
+db.users.aggregate([
+	{
+		$match: {
+			isActive: false,
+			tags: "velit",
+		},
+	},
+	{
+		$project: {
+			name: 1,
+			age: 1,
+		},
+	},
+	// {
+	//     $count: 'totalResults'
+	// }
+]);
+
+// 12) no. of users with phone number starting with "+1 (940)"...
+db.users.aggregate([
+	{
+		$match: {
+			"company.phone": /^\+1 \(940\)/,
+		},
+	},
+	{
+		$count: "totalResults",
+	},
+]);
+
+// 13) 
 
 // const q1 = db.users.aggregate(
 //     [
